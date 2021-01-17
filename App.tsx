@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Text, Button, TouchableOpacity, } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, } from 'react-native';
 
 
 const App = () => {
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   touchableOpacityStyle: {
-    height: 110,
-    width: 110,
+    height: 105,
+    width: 105,
     borderColor: 'black',
     borderWidth: 10
   },
