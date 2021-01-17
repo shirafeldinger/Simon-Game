@@ -21,7 +21,6 @@ const App = () => {
   };
 
   const clearGame = () => {
-    alert('You lose');
     setUserColors([]); setSimonColors([]); setScore(0)
   }
   const checkUserSelection = () => {
@@ -30,6 +29,7 @@ const App = () => {
       setUserColors([]);
       manageSimonchoice();
     } else {
+      alert('You lose');
       return clearGame();
     }
 
@@ -38,10 +38,11 @@ const App = () => {
   console.log(simonsColors, 'simon');
 
   const checkTurn = () => {
-    if (userColors.length = simonsColors.length) {
+    if (userColors.length == simonsColors.length && simonsColors.length != 0) {
       checkUserSelection();
     }
   };
+  checkTurn();
   return (
     <View style={{ flex: 1 }}>
       <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
@@ -53,7 +54,6 @@ const App = () => {
       <View style={{ flex: 1 }}>
         <Button title='clear' onPress={() => clearGame()}></Button>
         <Button title='start' onPress={() => manageSimonchoice()} />
-        <Button title='check' onPress={() => { checkUserSelection() }} />
       </View>
       <Text style={{ flex: 1, alignSelf: 'center' }}>Current Scrore:{score}</Text>
     </View>
