@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  Button,
-} from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Button, } from 'react-native';
 
 
 const App = () => {
