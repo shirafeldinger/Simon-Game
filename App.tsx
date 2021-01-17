@@ -15,7 +15,6 @@ const App = () => {
   const [simonsColors, setSimonColors] = useState([] as string[]);
   const [score, setScore] = useState(0)
 
-
   const manageSimonchoice = () => {
     const colors = ['red', 'blue', 'green', 'orange'];
     let newSimonsColors: string[] = [...simonsColors]
@@ -60,8 +59,6 @@ const App = () => {
     </View>
 
   )
-
-
 };
 
 
