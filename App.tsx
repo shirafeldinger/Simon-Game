@@ -5,7 +5,7 @@ import { StyleSheet, ScrollView, View, Text, Button, } from 'react-native';
 const App = () => {
   const [userColors, setUserColors] = useState([] as string[]);
   const [simonsColors, setSimonColors] = useState([] as string[]);
-  const [score, setScore] = useState(0)
+  const [score, setScore] = useState(0);
 
   const manageSimonchoice = () => {
     const colors = ['red', 'blue', 'green', 'orange'];
@@ -26,14 +26,22 @@ const App = () => {
   }
   const checkUserSelection = () => {
     if (JSON.stringify(userColors) == JSON.stringify(simonsColors)) {
-      return setScore(score + 1)
+      setScore(score + 1);
+      setUserColors([]);
+      manageSimonchoice();
+    } else {
+      return clearGame();
     }
-    return clearGame();
+
   }
   console.log(userColors, 'user');
   console.log(simonsColors, 'simon');
 
-
+  const checkTurn = () => {
+    if (userColors.length = simonsColors.length) {
+      checkUserSelection();
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
