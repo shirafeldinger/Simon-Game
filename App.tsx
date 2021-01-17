@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Text, Button, } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Button, TouchableOpacity, } from 'react-native';
 
 
 const App = () => {
@@ -8,7 +8,7 @@ const App = () => {
   const [score, setScore] = useState(0);
 
   const manageSimonchoice = () => {
-    const colors = ['red', 'blue', 'green', 'orange'];
+    const colors = ['red', 'blue', 'green', 'yellow'];
     let newSimonsColors: string[] = [...simonsColors]
     let chosenColor = colors[Math.floor(Math.random() * 3)];
     newSimonsColors.push(chosenColor);
@@ -44,24 +44,58 @@ const App = () => {
   };
   checkTurn();
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-        <Button color='blue' title='blue' onPress={() => { manageUserChoice('blue') }}></Button>
-        <Button color='green' title='green' onPress={() => { manageUserChoice('green') }}></Button>
-        <Button color='orange' title='orange' onPress={() => { manageUserChoice('orange') }}></Button>
-        <Button color='red' title='red' onPress={() => { manageUserChoice('red') }}></Button>
+    <View style={styles.container}>
+      <View style={styles.boradContainer}>
+        <View>
+          <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} onPress={() => { manageUserChoice('blue') }} />
+          <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} onPress={() => { manageUserChoice('green') }} />
+        </View>
+        <View>
+          <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} onPress={() => { manageUserChoice('yellow') }} />
+          <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} onPress={() => { manageUserChoice('red') }} />
+        </View>
+        <TouchableOpacity style={styles.centerBottom} onPress={() => manageSimonchoice()} >
+          <Text style={{ fontSize: 20 }}>Start</Text>
+        </TouchableOpacity>
       </View>
-      <View style={{ flex: 1 }}>
-        <Button title='clear' onPress={() => clearGame()}></Button>
-        <Button title='start' onPress={() => manageSimonchoice()} />
-      </View>
-      <Text style={{ flex: 1, alignSelf: 'center' }}>Current Scrore:{score}</Text>
+      <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore:{score}</Text>
     </View>
 
   )
 };
 
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  boradContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    margin: '5%',
+    position: 'relative'
+  },
+  touchableOpacityStyle: {
+    height: 110,
+    width: 110,
+    borderColor: 'black',
+    borderWidth: 10
+  },
+  centerBottom: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 50,
+    borderWidth: 15,
+    borderColor: 'black',
+    height: 100,
+    width: 100
+  }
+});
 
 export default App;
