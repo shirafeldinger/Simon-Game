@@ -3,6 +3,8 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import GameBoard from './components/GameBoard';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import ResultsScreen from './components/ResultsScreen';
 
 export type SimonState = {
   simonsColors: Array<string>;
@@ -58,10 +60,15 @@ export const AppWrapper = () => {
     </Provider>)
 }
 
+const Stack = createStackNavigator();
+
 const App = () => {
   return (
     <NavigationContainer>
-      <GameBoard />
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="GameBoard" component={GameBoard} />
+        <Stack.Screen name="Results" component={ResultsScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   )
 };

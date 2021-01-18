@@ -1,10 +1,13 @@
 
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Button, } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { SimonState } from '../App';
 
-const GameBoard = () => {
+type GameBoardProps = {
+    navigation: any
+}
+const GameBoard = ({ navigation }) => {
     const userColors = useSelector<SimonState>(state => state.userColors) as Array<string>;
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
     const score = useSelector<SimonState>(state => state.score) as number;
@@ -65,6 +68,7 @@ const GameBoard = () => {
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>
             </View>
+            <Button title='Go to Results' onPress={() => { navigation.navigate('Results') }} />
             <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore:{score}</Text>
         </View>
     )
