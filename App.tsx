@@ -1,18 +1,58 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, } from 'react-native';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { createStore } from 'redux';
 
+type SimonState = {
+  simonsColors: Array<string>;
+}
+
+type SimonActions = {
+  type: 'RESET';
+} | {
+  type: 'SET_SIMON_COLORS';
+  simonsColors: Array<string>;
+}
+
+export const AppWrapper = () => {
+  const initialState = {
+    simonsColors: [],
+  }
+
+  const reducer = (state: SimonState = initialState, action: SimonActions): SimonState => {
+    switch (action.type) {
+      case 'SET_SIMON_COLORS':
+        return {
+          ...state,
+          simonsColors: action.simonsColors,
+        }
+      case 'RESET':
+        return initialState;
+      default:
+        return state;
+    }
+  }
+
+  const store = createStore(reducer);
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>)
+}
 
 const App = () => {
   const [userColors, setUserColors] = useState([] as string[]);
-  const [simonsColors, setSimonColors] = useState([] as string[]);
+  const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
   const [score, setScore] = useState(0);
+
+  const dispatch = useDispatch();
 
   const manageSimonchoice = () => {
     const colors = ['red', 'blue', 'green', 'yellow'];
     let newSimonsColors: string[] = [...simonsColors]
     let chosenColor = colors[Math.floor(Math.random() * 3)];
     newSimonsColors.push(chosenColor);
-    setSimonColors([...newSimonsColors])
+    dispatch({ type: 'SET_SIMON_COLORS', simonColors: [...newSimonsColors] });
   }
   const manageUserChoice = (chosenColor: string) => {
     let newUserColors: string[] = [...userColors]
@@ -21,7 +61,8 @@ const App = () => {
   };
 
   const clearGame = () => {
-    setUserColors([]); setSimonColors([]); setScore(0)
+    setUserColors([]); setScore(0);
+    dispatch({ type: 'RESET' });
   }
   const checkUserSelection = () => {
     if (JSON.stringify(userColors) == JSON.stringify(simonsColors)) {
@@ -43,6 +84,7 @@ const App = () => {
     }
   };
   checkTurn();
+
   return (
     <View style={styles.container}>
       <View style={styles.boradContainer}>
@@ -60,7 +102,6 @@ const App = () => {
       </View>
       <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore:{score}</Text>
     </View>
-
   )
 };
 
