@@ -6,9 +6,9 @@ import { SimonState } from '../App';
 
 const ResultsScreen = () => {
     const modalIsVisible = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
+    const score = useSelector<SimonState>(state => state.score) as number;
     const [value, onChangeText] = React.useState('');
     const dispatch = useDispatch();
-
     return (
         <View>
             <Text> Results</Text>

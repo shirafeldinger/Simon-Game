@@ -40,7 +40,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     console.log(simonsColors, 'simon');
 
     const checkTurn = () => {
-        if (userColors.length == simonsColors.length && simonsColors.length != 0) {
+        if (userColors.length >= simonsColors.length && simonsColors.length != 0) {
             checkUserSelection();
         }
     };
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         margin: '5%',
-        position: 'relative'
+        position: 'relative',
     },
     touchableOpacityStyle: {
         height: 105,
@@ -101,10 +101,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
         borderRadius: 50,
-        borderWidth: 15,
+        borderWidth: 10,
         borderColor: 'black',
-        height: 100,
-        width: 100
+        height: 80,
+        width: 80
     }
 });
 
