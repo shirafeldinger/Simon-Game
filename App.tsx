@@ -5,6 +5,8 @@ import { createStore } from 'redux';
 
 type SimonState = {
   simonsColors: Array<string>;
+  score: number;
+  userColors: Array<string>;
 }
 
 type SimonActions = {
@@ -12,11 +14,19 @@ type SimonActions = {
 } | {
   type: 'SET_SIMON_COLORS';
   simonsColors: Array<string>;
+} | {
+  type: 'SET_SCORE';
+  score: number
+} | {
+  type: 'SET_USER_COLORS';
+  userColors: Array<string>;
 }
 
 export const AppWrapper = () => {
   const initialState = {
     simonsColors: [],
+    score: 0,
+    userColors: [],
   }
 
   const reducer = (state: SimonState = initialState, action: SimonActions): SimonState => {
@@ -26,8 +36,15 @@ export const AppWrapper = () => {
           ...state,
           simonsColors: action.simonsColors,
         }
+      case 'SET_USER_COLORS':
+        return {
+          ...state,
+          userColors: action.userColors,
+        }
       case 'RESET':
         return initialState;
+      case 'SET_SCORE':
+        return { ...state, score: state.score + 1 }
       default:
         return state;
     }
@@ -41,40 +58,35 @@ export const AppWrapper = () => {
 }
 
 const App = () => {
-  const [userColors, setUserColors] = useState([] as string[]);
+  const userColors = useSelector<SimonState>(state => state.userColors) as Array<string>;
   const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
-  const [score, setScore] = useState(0);
-
+  const score = useSelector<SimonState>(state => state.score) as number;
   const dispatch = useDispatch();
+  const colors = ['red', 'blue', 'green', 'yellow'];
 
   const manageSimonchoice = () => {
-    const colors = ['red', 'blue', 'green', 'yellow'];
     let newSimonsColors: string[] = [...simonsColors]
     let chosenColor = colors[Math.floor(Math.random() * 3)];
     newSimonsColors.push(chosenColor);
-    dispatch({ type: 'SET_SIMON_COLORS', simonColors: [...newSimonsColors] });
+    console.log('going to dispatch', [...newSimonsColors]);
+
+    dispatch({ type: 'SET_SIMON_COLORS', simonsColors: [...newSimonsColors] });
   }
   const manageUserChoice = (chosenColor: string) => {
     let newUserColors: string[] = [...userColors]
     newUserColors.push(chosenColor)
-    setUserColors([...newUserColors]);
+    dispatch({ type: 'SET_USER_COLORS', userColors: [...newUserColors] });
   };
 
-  const clearGame = () => {
-    setUserColors([]); setScore(0);
-    dispatch({ type: 'RESET' });
-  }
   const checkUserSelection = () => {
     if (JSON.stringify(userColors) == JSON.stringify(simonsColors)) {
-      setScore(score + 1);
-      setUserColors([]);
+      dispatch([{ type: 'SET_SCORE' }, { type: 'SET_USER_COLORS', userColors: [] }]);
       manageSimonchoice();
     } else {
       alert('You lose');
-      return clearGame();
+      dispatch({ type: 'RESET' });
     }
-
-  }
+  };
   console.log(userColors, 'user');
   console.log(simonsColors, 'simon');
 
@@ -84,6 +96,9 @@ const App = () => {
     }
   };
   checkTurn();
+  /// listen on state.simonColors using useEffect. on every state change fire a function that goes over 
+  // the array of colors one by one whith timeout between one another and triggers an animation state for a matching color element.
+  const isActive = false;
 
   return (
     <View style={styles.container}>
@@ -93,7 +108,7 @@ const App = () => {
           <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} onPress={() => { manageUserChoice('green') }} />
         </View>
         <View>
-          <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} onPress={() => { manageUserChoice('yellow') }} />
+          <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', opacity: isActive ? 1 : 0.5, borderTopRightRadius: 100 }]} onPress={() => { manageUserChoice('yellow') }} />
           <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} onPress={() => { manageUserChoice('red') }} />
         </View>
         <TouchableOpacity style={styles.centerBottom} onPress={() => manageSimonchoice()} >
