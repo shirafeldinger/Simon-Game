@@ -11,6 +11,7 @@ export type SimonState = {
   simonsColors: Array<string>;
   score: number;
   userColors: Array<string>;
+  modalIsVisible: boolean;
 }
 
 type SimonActions = {
@@ -24,6 +25,9 @@ type SimonActions = {
 } | {
   type: 'SET_USER_COLORS';
   userColors: Array<string>;
+} | {
+  type: 'SET_MODAL_IS_VISIBLE';
+  modalIsVisible: boolean;
 }
 
 export const AppWrapper = () => {
@@ -31,6 +35,7 @@ export const AppWrapper = () => {
     simonsColors: [],
     score: 0,
     userColors: [],
+    modalIsVisible: true
   }
 
   const reducer = (state: SimonState = initialState, action: SimonActions): SimonState => {
@@ -49,6 +54,8 @@ export const AppWrapper = () => {
         return initialState;
       case 'SET_SCORE':
         return { ...state, score: state.score + 1 }
+      case 'SET_MODAL_IS_VISIBLE':
+        return { ...state, modalIsVisible: !state.modalIsVisible }
       default:
         return state;
     }
