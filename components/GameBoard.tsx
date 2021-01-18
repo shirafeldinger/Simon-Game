@@ -1,17 +1,17 @@
 
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Button, } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { SimonState } from '../App';
+import { NavigationProps, SimonState } from '../App';
 
-type GameBoardProps = {
-    navigation: any
-}
-const GameBoard = ({ navigation }) => {
+
+
+const GameBoard = ({ navigation }: NavigationProps) => {
     const userColors = useSelector<SimonState>(state => state.userColors) as Array<string>;
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
     const score = useSelector<SimonState>(state => state.score) as number;
     const dispatch = useDispatch();
+    const [modalVisible, setModalVisible] = useState(false);
     const colors = ['red', 'blue', 'green', 'yellow'];
 
     const manageSimonchoice = () => {
@@ -32,7 +32,7 @@ const GameBoard = ({ navigation }) => {
             dispatch({ type: 'SET_USER_COLORS', userColors: [] });
             manageSimonchoice();
         } else {
-            alert('You lose');
+            setModalVisible(true);
             dispatch({ type: 'RESET' });
         }
     };
@@ -68,8 +68,18 @@ const GameBoard = ({ navigation }) => {
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>
             </View>
-            <Button title='Go to Results' onPress={() => { navigation.navigate('Results') }} />
-            <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore:{score}</Text>
+            <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore: {score}</Text>
+
+
+            <Modal animationType="slide" transparent={true} visible={modalVisible}>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>You Lost!😢</Text>
+                        <Button title='move to Results' onPress={() => { navigation.navigate('Results'); setModalVisible(false) }}></Button>
+                    </View>
+                </View>
+            </Modal>
+
         </View>
     )
 };
@@ -105,6 +115,25 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         height: 100,
         width: 100
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    modalText: {
+        fontSize: 20,
+        margin: '3%'
     }
 });
 

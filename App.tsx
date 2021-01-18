@@ -5,6 +5,7 @@ import GameBoard from './components/GameBoard';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResultsScreen from './components/ResultsScreen';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export type SimonState = {
   simonsColors: Array<string>;
@@ -58,17 +59,25 @@ export const AppWrapper = () => {
     <Provider store={store}>
       <App />
     </Provider>)
-}
+};
+type RootStackParamList = {
+  GameBoard: undefined;
+  Results: undefined;
+};
+const RootStack = createStackNavigator<RootStackParamList>();
 
-const Stack = createStackNavigator();
+type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GameBoard'>;
 
+export type NavigationProps = {
+  navigation: ProfileScreenNavigationProp;
+};
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="GameBoard" component={GameBoard} />
-        <Stack.Screen name="Results" component={ResultsScreen} />
-      </Stack.Navigator>
+      <RootStack.Navigator initialRouteName="GameBoard">
+        <RootStack.Screen name="GameBoard" component={GameBoard} options={{ title: "Welcome to Shira's Simon Says Game" }} />
+        <RootStack.Screen name="Results" component={ResultsScreen} options={{ title: "Game Results" }} />
+      </RootStack.Navigator>
     </NavigationContainer>
   )
 };
