@@ -4,9 +4,6 @@ import { StyleSheet, View, Text, TouchableOpacity, } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { SimonState } from '../App';
 
-
-
-
 const GameBoard = () => {
     const userColors = useSelector<SimonState>(state => state.userColors) as Array<string>;
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
@@ -48,6 +45,10 @@ const GameBoard = () => {
     /// listen on state.simonColors using useEffect. on every state change fire a function that goes over 
     // the array of colors one by one whith timeout between one another and triggers an animation state for a matching color element.
     const isActive = true;
+
+    const showSimonMove = () => {
+
+    }
 
     return (
         <View style={styles.container}>

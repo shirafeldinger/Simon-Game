@@ -1,7 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import GameBoard from './components/gameBoard';
+import GameBoard from './components/GameBoard';
+import { NavigationContainer } from '@react-navigation/native';
 
 export type SimonState = {
   simonsColors: Array<string>;
@@ -59,7 +60,9 @@ export const AppWrapper = () => {
 
 const App = () => {
   return (
-    <GameBoard />
+    <NavigationContainer>
+      <GameBoard />
+    </NavigationContainer>
   )
 };
 
