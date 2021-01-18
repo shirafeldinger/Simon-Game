@@ -6,7 +6,7 @@ import { SimonState } from '../App';
 
 const ResultsScreen = () => {
     const modalIsVisible = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
-    const score = useSelector<SimonState>(state => state.score) as number;
+    const [value, onChangeText] = React.useState('');
     const dispatch = useDispatch();
 
     return (
@@ -15,15 +15,17 @@ const ResultsScreen = () => {
             <View >
                 <FlatList data={[]} renderItem={({ item }) => <Text ></Text>} />
             </View>
-
-
             <Modal animationType="slide" transparent={true} visible={modalIsVisible}>
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>You Lost!😢</Text>
-                        <Text>Please Enter your name: </Text>
-                        <TextInput />
-                        <Button title='move to Results' onPress={() => { dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false }) }}></Button>
+                        <Text style={styles.modalText}>You Lost! 😢</Text>
+                        <TextInput style={styles.inputStyle}
+                            placeholder={'Please enter your name'}
+                            onChangeText={text => onChangeText(text)}
+                            value={value} />
+                        <Button title='move to Results'
+                            onPress={() => { dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false }) }}>
+                        </Button>
                     </View>
                 </View>
             </Modal>
@@ -50,6 +52,11 @@ const styles = StyleSheet.create({
     },
     modalText: {
         fontSize: 20,
+    },
+    inputStyle: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
         margin: '3%'
     }
 
