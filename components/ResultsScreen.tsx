@@ -13,7 +13,6 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     const [validName, setValidName] = useState('');
     const dispatch = useDispatch();
 
-
     const manageResults = (userName: string) => {
         if (userName.length === 0) {
             return setValidName('you must enter a name')
@@ -25,6 +24,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
         if (checkUserName) {
             return setValidName('name already in use')
         };
+        // check if result is in the top 10 
         const checkScore = results.some(result => score < result.score);
         if (checkScore && results.length >= 10) {
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
@@ -36,10 +36,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
         dispatch({ type: 'RESET' });
         dispatch({ type: 'SET_RESULTS', results: sortResults });
         dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
-
-
     };
-
 
     const renderResults: (result: { item: Result, index: number }) => ReactElement<JSX.Element> = ({ item, index }) => {
         return (
