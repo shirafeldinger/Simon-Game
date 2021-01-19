@@ -51,15 +51,9 @@ export const AppWrapper = () => {
   const reducer = (state: SimonState = initialState, action: SimonActions): SimonState => {
     switch (action.type) {
       case 'SET_SIMON_COLORS':
-        return {
-          ...state,
-          simonsColors: action.simonsColors,
-        }
+        return { ...state, simonsColors: action.simonsColors, }
       case 'SET_USER_COLORS':
-        return {
-          ...state,
-          userColors: action.userColors,
-        }
+        return { ...state, userColors: action.userColors }
       case 'RESET':
         return initialState;
       case 'SET_SCORE':
