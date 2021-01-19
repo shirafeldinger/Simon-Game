@@ -15,7 +15,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
 
     const manageSimonchoice = () => {
         let newSimonsColors: string[] = [...simonsColors]
-        let chosenColor = colors[Math.floor(Math.random() * 3)];
+        let chosenColor = colors[Math.floor(Math.random() * colors.length)];
         newSimonsColors.push(chosenColor);
         dispatch({ type: 'SET_SIMON_COLORS', simonsColors: [...newSimonsColors] });
     }
@@ -26,7 +26,8 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     };
 
     const checkUserSelection = () => {
-        if (JSON.stringify(userColors) == JSON.stringify(simonsColors)) {
+        const isMoveEqual = userColors.every((color, index) => color == simonsColors[index])
+        if (isMoveEqual) {
             dispatch({ type: 'SET_SCORE' })
             dispatch({ type: 'SET_USER_COLORS', userColors: [] });
             manageSimonchoice();
@@ -45,13 +46,6 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         }
     };
     checkTurn();
-    /// listen on state.simonColors using useEffect. on every state change fire a function that goes over 
-    // the array of colors one by one whith timeout between one another and triggers an animation state for a matching color element.
-    const isActive = true;
-
-    const showSimonMove = () => {
-
-    }
 
     return (
         <View style={styles.container}>
@@ -61,7 +55,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
                     <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} onPress={() => { manageUserChoice('green') }} />
                 </View>
                 <View>
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', opacity: isActive ? 1 : 0.5, borderTopRightRadius: 100 }]} onPress={() => { manageUserChoice('yellow') }} />
+                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} onPress={() => { manageUserChoice('yellow') }} />
                     <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} onPress={() => { manageUserChoice('red') }} />
                 </View>
                 <TouchableOpacity style={styles.centerBottom} onPress={() => manageSimonchoice()} >
