@@ -12,19 +12,21 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     const [validName, setValidName] = useState('');
     const dispatch = useDispatch();
 
+
     const manageResults = (userName: string) => {
         if (userName.length === 0) {
-            return setValidName('you must enter a name')
-        }
+            setValidName('you must enter a name')
+        };
         let newResults: Array<Result> = [...results]
         // check if user name already in use
         const checkUserName = newResults.some(result => result.userName === userName)
         if (!checkUserName) {
             newResults.push({ userName, score })
+            const sortResults = newResults.sort((a, b) => (a.score < b.score) ? 1 : -1);
             dispatch({ type: 'RESET' });
-            dispatch({ type: 'SET_RESULTS', results: newResults });
+            dispatch({ type: 'SET_RESULTS', results: sortResults });
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
-        };
+        }
         return setValidName('name already in use')
 
     };
