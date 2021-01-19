@@ -9,7 +9,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     const score = useSelector<SimonState>(state => state.score) as number;
     // const results = useSelector<SimonState>(state => state.simonsColors) as Array<Result>;
     const [userName, setUserName] = useState('');
-    const [results, setResults] = useState([])
+    const [results, setResults] = useState([{ userName: 'lemon', score: 200 }, { userName: 'shira', score: 300 }])
     const dispatch = useDispatch();
 
     const manageResults = (userName: string) => {
@@ -32,15 +32,17 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
 
     return (
         <View style={styles.container}>
-            <Text style={{ fontSize: 30, padding: '5%' }}> Results</Text>
-            <View style={{ width: '50%' }} >
+            <Text style={{ fontSize: 30, padding: '5%', flex: 1 }}> Results</Text>
+            <View style={{ width: '50%', flex: 5 }} >
                 <View style={styles.resultStyle}>
                     <Text style={styles.resultHeardLine}>Name</Text>
                     <Text style={styles.resultHeardLine}>Score</Text>
                 </View>
                 <FlatList data={results} renderItem={renderResults} keyExtractor={(result: Result) => result.userName ?? ''} />
             </View>
-            <Button title='Start New Game' onPress={() => navigation.navigate('GameBoard')} />
+            <View style={{ flex: 2 }}>
+                <Button title='Start New Game' onPress={() => navigation.navigate('GameBoard')} />
+            </View>
             <Modal animationType="slide" transparent={true} visible={modalIsVisible}>
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <View style={styles.modalView}>
@@ -67,12 +69,12 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
+        flex: 1
     },
     resultStyle: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        flex: 1,
         marginVertical: '5%'
     },
     resultHeardLine: {
