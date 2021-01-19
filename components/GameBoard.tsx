@@ -4,7 +4,6 @@ import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProps, SimonState } from '../App';
 import Sound from 'react-native-sound';
-import { useEffect } from 'react';
 
 const colors = ['blue', 'green', 'yellow', 'red'];
 const sound: Sound = new Sound('click_sound.mp3', Sound.MAIN_BUNDLE)

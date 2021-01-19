@@ -50,7 +50,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     return (
         <View style={styles.container}>
 
-            <Text style={{ fontSize: 30, padding: '5%', flex: 1 }}> Results</Text>
+            <Text style={{ fontSize: 40, padding: '5%', flex: 1, color: '#6495ED', fontWeight: 'bold' }}> Results</Text>
             <View style={{ width: '50%', flex: 6 }} >
                 <View style={styles.resultStyle}>
                     <Text style={styles.resultHeardLine}>Name</Text>

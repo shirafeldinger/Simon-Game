@@ -88,8 +88,8 @@ const App = () => {
   return (
     <NavigationContainer>
       <RootStack.Navigator initialRouteName="GameBoard">
-        <RootStack.Screen name="GameBoard" component={GameBoard} options={{ title: "Welcome to Shira's Simon Says Game" }} />
-        <RootStack.Screen name="Results" component={ResultsScreen} options={{ title: "Game Results" }} />
+        <RootStack.Screen name="GameBoard" component={GameBoard} options={{ title: "Welcome to Shira's Simon Says Game", headerTitleAlign: 'center' }} />
+        <RootStack.Screen name="Results" component={ResultsScreen} options={{ title: "Game Results", headerTitleAlign: 'center' }} />
       </RootStack.Navigator>
     </NavigationContainer>
   )
