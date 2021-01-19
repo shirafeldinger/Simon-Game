@@ -15,10 +15,14 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     const manageResults = (userName: string) => {
         if (userName.length > 0) {
             let newResults: Array<Result> = [...results]
-            newResults.push({ userName, score })
-            dispatch({ type: 'RESET' });
-            dispatch({ type: 'SET_RESULTS', results: [...newResults] });
-            dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
+            // check if user name already in use
+            const checkUserName = newResults.some(result => result.userName === userName)
+            if (!checkUserName) {
+                newResults.push({ userName, score })
+                dispatch({ type: 'RESET' });
+                dispatch({ type: 'SET_RESULTS', results: newResults });
+                dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
+            };
         } setValidName('red')
 
     };
@@ -62,7 +66,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
                         <Button title='move to Results'
                             onPress={() => { manageResults(userName) }}>
                         </Button>
-                        <Text style={{ color: validName }}>Please enter you name</Text>
+                        <Text style={{ color: validName }}>Invalid name</Text>
                     </View>
                 </View>
             </Modal>
