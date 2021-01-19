@@ -7,17 +7,15 @@ import { NavigationProps, Result, SimonState } from '../App';
 const ResultsScreen = ({ navigation }: NavigationProps) => {
     const modalIsVisible = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
     const score = useSelector<SimonState>(state => state.score) as number;
-    // const results = useSelector<SimonState>(state => state.simonsColors) as Array<Result>;
+    const results = useSelector<SimonState>(state => state.results) as Array<Result>;
     const [userName, setUserName] = useState('');
-    const [results, setResults] = useState([{ userName: 'lemon', score: 200 }, { userName: 'shira', score: 300 }])
     const dispatch = useDispatch();
 
     const manageResults = (userName: string) => {
         let newResults: Array<Result> = [...results]
         newResults.push({ userName, score })
-        setResults([...newResults])
         dispatch({ type: 'RESET' });
-        // dispatch({ type: 'SET_RESULTS', results: [...newResults] });
+        dispatch({ type: 'SET_RESULTS', results: [...newResults] });
     };
 
 

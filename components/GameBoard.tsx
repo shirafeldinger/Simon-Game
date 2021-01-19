@@ -6,34 +6,40 @@ import { NavigationProps, SimonState } from '../App';
 import Sound from 'react-native-sound';
 import { useEffect } from 'react';
 
+const colors = ['blue', 'green', 'yellow', 'red'];
+const sound: Sound = new Sound('click_sound.mp3', Sound.MAIN_BUNDLE)
 
 const GameBoard = ({ navigation }: NavigationProps) => {
     const userColors = useSelector<SimonState>(state => state.userColors) as Array<string>;
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
     const score = useSelector<SimonState>(state => state.score) as number;
     const dispatch = useDispatch();
-    const colors = ['blue', 'green', 'yellow', 'red'];
-    let sound: Sound = new Sound('click_sound.mp3', Sound.MAIN_BUNDLE)
 
-    const manageSimonchoice = () => {
-        let newSimonsColors: string[] = [...simonsColors]
+
+    const simonPlay = (simonColors: Array<string>) => {
+        let newSimonsColors: Array<string> = [...simonColors]
         let chosenColor = colors[Math.floor(Math.random() * colors.length)];
         newSimonsColors.push(chosenColor);
-        dispatch({ type: 'SET_SIMON_COLORS', simonsColors: [...newSimonsColors] });
-    }
-    const manageUserChoice = (chosenColor: string) => {
-        sound.play();
-        let newUserColors: string[] = [...userColors]
-        newUserColors.push(chosenColor)
-        dispatch({ type: 'SET_USER_COLORS', userColors: [...newUserColors] });
+        dispatch({ type: 'SET_SIMON_COLORS', simonsColors: newSimonsColors });
     };
 
-    const checkUserSelection = () => {
-        const isMoveEqual = userColors.every((color, index) => color == simonsColors[index])
-        if (isMoveEqual) {
+    const userPlay = (chosenColor: string) => {
+        sound.play();
+        let newUserColors: Array<string> = [...userColors]
+        newUserColors.push(chosenColor);
+        if (newUserColors.length === simonsColors.length) {
+            checkUserSelection(newUserColors);
+        } else {
+            dispatch({ type: 'SET_USER_COLORS', userColors: newUserColors });
+        };
+    };
+
+    const checkUserSelection = (userColors: Array<string>) => {
+        const hasUserSucceeded = userColors.every((color, index) => color === simonsColors[index])
+        if (hasUserSucceeded) {
             dispatch({ type: 'SET_SCORE' })
             dispatch({ type: 'SET_USER_COLORS', userColors: [] });
-            manageSimonchoice();
+            simonPlay(simonsColors);
         } else {
             navigation.navigate('Results')
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: true })
@@ -42,25 +48,18 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     console.log(userColors, 'user');
     console.log(simonsColors, 'simon');
 
-    const checkTurn = () => {
-        if (userColors.length >= simonsColors.length && simonsColors.length != 0) {
-            checkUserSelection();
-        }
-    };
-    checkTurn();
-
     return (
         <View style={styles.container}>
             <View style={styles.boradContainer}>
                 <View>
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} onPress={() => { manageUserChoice('blue') }} />
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} onPress={() => { manageUserChoice('green') }} />
+                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} onPress={() => { userPlay('blue') }} />
+                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} onPress={() => { userPlay('green') }} />
                 </View>
                 <View>
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} onPress={() => { manageUserChoice('yellow') }} />
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} onPress={() => { manageUserChoice('red') }} />
+                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} onPress={() => { userPlay('yellow') }} />
+                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} onPress={() => { userPlay('red') }} />
                 </View>
-                <TouchableOpacity style={styles.centerBottom} onPress={() => manageSimonchoice()} >
+                <TouchableOpacity style={styles.centerBottom} onPress={() => simonPlay([])} >
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>
             </View>
