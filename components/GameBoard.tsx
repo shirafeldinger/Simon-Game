@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProps, SimonState } from '../App';
+import Sound from 'react-native-sound';
 
 
 const GameBoard = ({ navigation }: NavigationProps) => {
