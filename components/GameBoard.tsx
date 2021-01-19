@@ -12,23 +12,8 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
     const score = useSelector<SimonState>(state => state.score) as number;
     const dispatch = useDispatch();
-    const colors = ['red', 'blue', 'green', 'yellow'];
-    let playSound: Sound;
-
-    useEffect(() => {
-        playSound = new Sound('click_sound.mp3', Sound.MAIN_BUNDLE, (error) => {
-            if (error) {
-                console.log('failed to load the sound', error);
-                return;
-            }
-            // loaded successfully
-            console.log('duration in seconds: ' + playSound.getDuration() + 'number of channels: ' + playSound.getNumberOfChannels());
-
-        })
-        return () => {
-            playSound.release
-        }
-    })
+    const colors = ['blue', 'green', 'yellow', 'red'];
+    let sound: Sound = new Sound('click_sound.mp3', Sound.MAIN_BUNDLE)
 
     const manageSimonchoice = () => {
         let newSimonsColors: string[] = [...simonsColors]
@@ -37,6 +22,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         dispatch({ type: 'SET_SIMON_COLORS', simonsColors: [...newSimonsColors] });
     }
     const manageUserChoice = (chosenColor: string) => {
+        sound.play();
         let newUserColors: string[] = [...userColors]
         newUserColors.push(chosenColor)
         dispatch({ type: 'SET_USER_COLORS', userColors: [...newUserColors] });
@@ -63,18 +49,6 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     };
     checkTurn();
 
-    const onStartClick = () => {
-        playSound.play((success) => {
-            if (success) {
-                console.log('successfully finished playing');
-            } else {
-                console.log('playback failed due to audio decoding errors');
-            }
-        });
-
-
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.boradContainer}>
@@ -92,11 +66,6 @@ const GameBoard = ({ navigation }: NavigationProps) => {
             </View>
             <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore: {score}</Text>
             <Button title='Results' onPress={() => navigation.navigate('Results')} />
-            <TouchableOpacity onPress={onStartClick}>
-                <View>
-                    <Text>Start</Text>
-                </View>
-            </TouchableOpacity>
         </View>
     )
 };
