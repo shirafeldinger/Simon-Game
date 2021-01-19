@@ -8,14 +8,19 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     const modalIsVisible = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
     const score = useSelector<SimonState>(state => state.score) as number;
     const results = useSelector<SimonState>(state => state.results) as Array<Result>;
+    const modal = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
     const [userName, setUserName] = useState('');
     const dispatch = useDispatch();
 
     const manageResults = (userName: string) => {
-        let newResults: Array<Result> = [...results]
-        newResults.push({ userName, score })
-        dispatch({ type: 'RESET' });
-        dispatch({ type: 'SET_RESULTS', results: [...newResults] });
+        if (userName.length > 0) {
+            let newResults: Array<Result> = [...results]
+            newResults.push({ userName, score })
+            dispatch({ type: 'RESET' });
+            dispatch({ type: 'SET_RESULTS', results: [...newResults] });
+            dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
+        } alert('Please enter your name')
+
     };
 
 
@@ -30,7 +35,9 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
 
     return (
         <View style={styles.container}>
+
             <Text style={{ fontSize: 30, padding: '5%', flex: 1 }}> Results</Text>
+
             <View style={{ width: '50%', flex: 5 }} >
                 <View style={styles.resultStyle}>
                     <Text style={styles.resultHeardLine}>Name</Text>
@@ -38,26 +45,27 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
                 </View>
                 <FlatList data={results} renderItem={renderResults} keyExtractor={(result: Result) => result.userName ?? ''} />
             </View>
+
             <View style={{ flex: 2 }}>
                 <Button title='Start New Game' onPress={() => navigation.navigate('GameBoard')} />
             </View>
+
             <Modal animationType="slide" transparent={true} visible={modalIsVisible}>
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>You Lost! 😢</Text>
                         <TextInput style={styles.inputStyle}
                             placeholder={'Please enter your name'}
+                            placeholderTextColor={'grey'}
                             onChangeText={userName => setUserName(userName)}
                             value={userName} />
                         <Button title='move to Results'
-                            onPress={() => {
-                                manageResults(userName);
-                                dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
-                            }}>
+                            onPress={() => { manageResults(userName) }}>
                         </Button>
                     </View>
                 </View>
             </Modal>
+
         </View>
     )
 };
@@ -101,8 +109,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     inputStyle: {
-        height: 40,
-        borderColor: 'gray',
+        height: 45,
+        borderColor: 'black',
         borderWidth: 1,
         margin: '3%'
     }

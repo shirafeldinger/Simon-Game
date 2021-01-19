@@ -44,7 +44,7 @@ export const AppWrapper = () => {
     simonsColors: [],
     score: 0,
     userColors: [],
-    modalIsVisible: true,
+    modalIsVisible: false,
     results: []
   }
 
@@ -65,7 +65,7 @@ export const AppWrapper = () => {
       case 'SET_SCORE':
         return { ...state, score: state.score + 1 }
       case 'SET_MODAL_IS_VISIBLE':
-        return { ...state, modalIsVisible: !state.modalIsVisible }
+        return { ...state, modalIsVisible: action.modalIsVisible }
       case 'SET_RESULTS':
         return { ...state, results: action.results }
       default:
