@@ -2,40 +2,45 @@
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, Button, Modal, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { SimonState } from '../App';
+import { NavigationProps, Result, SimonState } from '../App';
 
-const ResultsScreen = () => {
+const ResultsScreen = ({ navigation }: NavigationProps) => {
     const modalIsVisible = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
     const score = useSelector<SimonState>(state => state.score) as number;
+    // const results = useSelector<SimonState>(state => state.simonsColors) as Array<Result>;
     const [userName, setUserName] = useState('');
-    const [results, setResults] = useState([{ userName: 'shira', score: 20 }])
+    const [results, setResults] = useState([])
     const dispatch = useDispatch();
 
-    type Result = {
-        userName: string;
-        score: number;
-    }
-    const fetchResults = (userName: string) => {
-        let newResults = [...results]
+    const manageResults = (userName: string) => {
+        let newResults: Array<Result> = [...results]
         newResults.push({ userName, score })
         setResults([...newResults])
+        dispatch({ type: 'RESET' });
+        // dispatch({ type: 'SET_RESULTS', results: [...newResults] });
     };
+
 
     const renderResults: (result: { item: Result, index: number }) => ReactElement<JSX.Element> = ({ item, index }) => {
         return (
             <View key={index} style={styles.resultStyle}>
-                <Text>{item.userName}</Text>
-                <Text>{item.score}</Text>
+                <Text style={styles.resultText}>{item.userName}</Text>
+                <Text style={styles.resultText}>{item.score}</Text>
             </View>
         );
     };
 
     return (
         <View style={styles.container}>
-            <Text> Results</Text>
-            <View style={{ width: '50%' }}>
+            <Text style={{ fontSize: 30, padding: '5%' }}> Results</Text>
+            <View style={{ width: '50%' }} >
+                <View style={styles.resultStyle}>
+                    <Text style={styles.resultHeardLine}>Name</Text>
+                    <Text style={styles.resultHeardLine}>Score</Text>
+                </View>
                 <FlatList data={results} renderItem={renderResults} keyExtractor={(result: Result) => result.userName ?? ''} />
             </View>
+            <Button title='Start New Game' onPress={() => navigation.navigate('GameBoard')} />
             <Modal animationType="slide" transparent={true} visible={modalIsVisible}>
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <View style={styles.modalView}>
@@ -46,7 +51,7 @@ const ResultsScreen = () => {
                             value={userName} />
                         <Button title='move to Results'
                             onPress={() => {
-                                fetchResults(userName);
+                                manageResults(userName);
                                 dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
                             }}>
                         </Button>
@@ -61,14 +66,21 @@ const ResultsScreen = () => {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     resultStyle: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
         flex: 1,
-        marginVertical: '5%',
+        marginVertical: '5%'
+    },
+    resultHeardLine: {
+        fontSize: 25,
+        fontWeight: 'bold'
+    },
+    resultText: {
+        fontSize: 20,
     },
     modalView: {
         margin: 20,

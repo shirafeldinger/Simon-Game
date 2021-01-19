@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProps, SimonState } from '../App';
 
@@ -33,7 +33,6 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         } else {
             navigation.navigate('Results')
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: true })
-            dispatch({ type: 'RESET' });
         }
     };
     console.log(userColors, 'user');
@@ -62,6 +61,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
                 </TouchableOpacity>
             </View>
             <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore: {score}</Text>
+            <Button title='Results' onPress={() => navigation.navigate('Results')} />
         </View>
     )
 };
