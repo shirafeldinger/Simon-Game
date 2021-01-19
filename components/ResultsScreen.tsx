@@ -1,6 +1,7 @@
 
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, Button, Modal, TextInput } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProps, Result, SimonState } from '../App';
 
@@ -15,19 +16,27 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
 
     const manageResults = (userName: string) => {
         if (userName.length === 0) {
-            setValidName('you must enter a name')
+            return setValidName('you must enter a name')
         };
         let newResults: Array<Result> = [...results]
         // check if user name already in use
         const checkUserName = newResults.some(result => result.userName === userName)
-        if (!checkUserName) {
-            newResults.push({ userName, score })
-            const sortResults = newResults.sort((a, b) => (a.score < b.score) ? 1 : -1);
-            dispatch({ type: 'RESET' });
-            dispatch({ type: 'SET_RESULTS', results: sortResults });
+        console.log(checkUserName);
+        if (checkUserName) {
+            return setValidName('name already in use')
+        };
+        const checkScore = results.some(result => score < result.score);
+        if (checkScore && results.length >= 10) {
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
-        }
-        return setValidName('name already in use')
+            alert('you are not in the top 10');
+            return;
+        };
+        newResults.push({ userName, score })
+        const sortResults = newResults.sort((a, b) => (a.score < b.score) ? 1 : -1);
+        dispatch({ type: 'RESET' });
+        dispatch({ type: 'SET_RESULTS', results: sortResults });
+        dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
+
 
     };
 
@@ -45,16 +54,17 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
         <View style={styles.container}>
 
             <Text style={{ fontSize: 30, padding: '5%', flex: 1 }}> Results</Text>
-
-            <View style={{ width: '50%', flex: 5 }} >
+            <View style={{ width: '50%', flex: 6 }} >
                 <View style={styles.resultStyle}>
                     <Text style={styles.resultHeardLine}>Name</Text>
                     <Text style={styles.resultHeardLine}>Score</Text>
                 </View>
-                <FlatList data={results} renderItem={renderResults} keyExtractor={(result: Result) => result.userName ?? ''} />
+                <ScrollView>
+                    <FlatList data={results} renderItem={renderResults} keyExtractor={(result: Result) => result.userName ?? ''} />
+                </ScrollView>
             </View>
 
-            <View style={{ flex: 2 }}>
+            <View style={{ flex: 1 }}>
                 <Button title='Start New Game' onPress={() => navigation.navigate('GameBoard')} />
             </View>
 
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginVertical: '5%'
+        marginVertical: '4%'
     },
     resultHeardLine: {
         fontSize: 25,
