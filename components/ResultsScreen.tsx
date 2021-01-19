@@ -8,8 +8,8 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     const modalIsVisible = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
     const score = useSelector<SimonState>(state => state.score) as number;
     const results = useSelector<SimonState>(state => state.results) as Array<Result>;
-    const modal = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
     const [userName, setUserName] = useState('');
+    const [validName, setValidName] = useState('white');
     const dispatch = useDispatch();
 
     const manageResults = (userName: string) => {
@@ -19,7 +19,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
             dispatch({ type: 'RESET' });
             dispatch({ type: 'SET_RESULTS', results: [...newResults] });
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
-        } alert('Please enter your name')
+        } setValidName('red')
 
     };
 
@@ -62,6 +62,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
                         <Button title='move to Results'
                             onPress={() => { manageResults(userName) }}>
                         </Button>
+                        <Text style={{ color: validName }}>Please enter you name</Text>
                     </View>
                 </View>
             </Modal>
