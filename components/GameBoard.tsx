@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProps, SimonState } from '../App';
 
 
-
 const GameBoard = ({ navigation }: NavigationProps) => {
     const userColors = useSelector<SimonState>(state => state.userColors) as Array<string>;
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
@@ -63,11 +62,9 @@ const GameBoard = ({ navigation }: NavigationProps) => {
                 </TouchableOpacity>
             </View>
             <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore: {score}</Text>
-
         </View>
     )
 };
-
 
 const styles = StyleSheet.create({
     container: {
