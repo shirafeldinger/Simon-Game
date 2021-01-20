@@ -94,7 +94,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         <View style={styles.container}>
             <View style={styles.boradContainer}>
 
-                <View >
+                <View>
                     {/* opacity only works in parent view */}
                     <View style={{ opacity: btnsOpacity.blue }}>
                         <TouchableOpacity disabled={lockButton()} onPress={() => { userPlay('blue') }}
