@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, Button, Modal, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavigationProps, Result, SimonState } from '../App';
+import { ActionTypes, NavigationProps, Result, SimonState } from '../types';
 
 const ResultsScreen = ({ navigation }: NavigationProps) => {
     const modalIsVisible = useSelector<SimonState>(state => state.modalIsVisible) as boolean;
@@ -27,15 +27,15 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
         // or if the score is lowest than any score do not add result to the array of results
         const checkScore = results.some(result => score < result.score);
         if (checkScore && results.length >= 10) {
-            dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
+            dispatch({ type: ActionTypes.SetModalIsVisible, modalIsVisible: false })
             alert('you are not in the top 10');
             return;
         };
         newResults.push({ userName, score })
         const sortResults = newResults.sort((a, b) => (a.score < b.score) ? 1 : -1);
-        dispatch({ type: 'RESET' });
-        dispatch({ type: 'SET_RESULTS', results: sortResults });
-        dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
+        dispatch({ type: ActionTypes.Reset });
+        dispatch({ type: ActionTypes.SetResults, results: sortResults });
+        dispatch({ type: ActionTypes.SetModalIsVisible, modalIsVisible: false })
     };
 
     const renderResults: (result: { item: Result, index: number }) => ReactElement<JSX.Element> = ({ item, index }) => {
@@ -56,6 +56,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
                     <Text style={styles.resultHeardLine}>Name</Text>
                     <Text style={styles.resultHeardLine}>Score</Text>
                 </View>
+                {/* if there is not space to show all the user can scrol */}
                 <ScrollView>
                     <FlatList data={results} renderItem={renderResults} keyExtractor={(result: Result) => result.userName ?? ''} />
                 </ScrollView>

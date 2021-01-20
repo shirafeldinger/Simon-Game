@@ -9,38 +9,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import { PersistGate } from 'redux-persist/integration/react'
+import { ActionTypes, RootStackParamList, SimonActions, SimonState } from './types';
 
-export type SimonState = {
-  simonsColors: Array<string>;
-  score: number;
-  userColors: Array<string>;
-  modalIsVisible: boolean;
-  results: Array<Result>
-}
-
-export type Result = {
-  userName: string;
-  score: number;
-}
-
-type SimonActions = {
-  type: 'RESET';
-} | {
-  type: 'SET_SIMON_COLORS';
-  simonsColors: Array<string>;
-} | {
-  type: 'SET_SCORE';
-  score: number
-} | {
-  type: 'SET_USER_COLORS';
-  userColors: Array<string>;
-} | {
-  type: 'SET_MODAL_IS_VISIBLE';
-  modalIsVisible: boolean;
-} | {
-  type: 'SET_RESULTS';
-  results: Array<Result>
-}
 
 export const AppWrapper = () => {
   const initialState = {
@@ -53,17 +23,17 @@ export const AppWrapper = () => {
 
   const reducer = (state: SimonState = initialState, action: SimonActions): SimonState => {
     switch (action.type) {
-      case 'SET_SIMON_COLORS':
+      case ActionTypes.SetSimonColors:
         return { ...state, simonsColors: action.simonsColors, }
-      case 'SET_USER_COLORS':
+      case ActionTypes.SetUsersColors:
         return { ...state, userColors: action.userColors }
-      case 'RESET':
-        return initialState;
-      case 'SET_SCORE':
+      case ActionTypes.Reset:
+        return { ...state, userColors: [], simonsColors: [], score: 0 }
+      case ActionTypes.SetScore:
         return { ...state, score: state.score + 1 }
-      case 'SET_MODAL_IS_VISIBLE':
+      case ActionTypes.SetModalIsVisible:
         return { ...state, modalIsVisible: action.modalIsVisible }
-      case 'SET_RESULTS':
+      case ActionTypes.SetResults:
         return { ...state, results: action.results }
       default:
         return state;
@@ -87,18 +57,7 @@ export const AppWrapper = () => {
     </Provider>)
 };
 
-type RootStackParamList = {
-  GameBoard: undefined;
-  Results: undefined;
-};
-
 const RootStack = createStackNavigator<RootStackParamList>();
-
-type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'GameBoard'>;
-
-export type NavigationProps = {
-  navigation: ProfileScreenNavigationProp;
-};
 
 const App = () => {
   return (

@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavigationProps, SimonState } from '../App';
 import Sound from 'react-native-sound';
+import { ActionTypes, NavigationProps, SimonState } from '../types';
 
 const colors = ['blue', 'green', 'yellow', 'red'];
 const sound: Sound = new Sound('click_sound.mp3', Sound.MAIN_BUNDLE)
@@ -22,7 +22,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         let newSimonsColors: Array<string> = [...simonColors]
         let chosenColor = colors[Math.floor(Math.random() * colors.length)];
         newSimonsColors.push(chosenColor);
-        dispatch({ type: 'SET_SIMON_COLORS', simonsColors: newSimonsColors });
+        dispatch({ type: ActionTypes.SetSimonColors, simonsColors: newSimonsColors });
         await showSimonMoves(newSimonsColors); // active showSimonMoves function to show user simon's choices and wait for her to end
         setSimonTurn(false) // enabled buttons for user turn
     };
@@ -32,7 +32,6 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     };
 
     const showSimonMoves = async (simonsColors: Array<string>) => {
-
         await wait(300)
         // loop through simon chosen colors and for chosen button set background with opacity 
         // and don't change opacity for  others colors in the array
@@ -41,18 +40,13 @@ const GameBoard = ({ navigation }: NavigationProps) => {
                 ...btnsOpacity,
                 [color]: 0.5
             };
-
             setBtnsOpacity(clonedOpacities)
-
             sound.play();
-
             await wait(50)
-
             clonedOpacities = {  // disabled opacity
                 ...btnsOpacity,
                 [color]: 1
             };
-
             setBtnsOpacity(clonedOpacities)
         };
     };
@@ -64,7 +58,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         if (newUserColors.length === simonsColors.length) {
             checkUserSelection(newUserColors);
         } else {
-            dispatch({ type: 'SET_USER_COLORS', userColors: newUserColors });
+            dispatch({ type: ActionTypes.SetUsersColors, userColors: newUserColors });
         };
     };
 
@@ -73,23 +67,22 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         const hasUserSucceeded = userColors.every((color, index) => color === simonsColors[index])
         // if true added 1 score and clean users old choices
         if (hasUserSucceeded) {
-            dispatch({ type: 'SET_SCORE' })
-            dispatch({ type: 'SET_USER_COLORS', userColors: [] });
+            dispatch({ type: ActionTypes.SetScore })
+            dispatch({ type: ActionTypes.SetUsersColors, userColors: [] });
             simonPlay(simonsColors);
-
             // if user failed navgiate to results component and show modal
         } else {
             navigation.navigate('Results')
-            dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: true })
-        }
+            dispatch({ type: ActionTypes.SetModalIsVisible, modalIsVisible: true })
+        };
     };
-    console.log(userColors, 'user');
-    console.log(simonsColors, 'simon');
 
     const lockButton = () => {
         return simonsColors.length == 0 || simonTurn
     };
 
+    console.log(userColors, 'user');
+    console.log(simonsColors, 'simon');
     return (
         <View style={styles.container}>
             <View style={styles.boradContainer}>
@@ -116,14 +109,15 @@ const GameBoard = ({ navigation }: NavigationProps) => {
                             style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} />
                     </View>
                 </View>
-
-                {/* when user click on start button simons chosen color's array should be empaty,
-                     even if it is in the middle of game */}
-                <TouchableOpacity style={styles.centerBottom} onPress={() => simonPlay([])} >
+                <TouchableOpacity disabled={simonsColors.length > 0} style={styles.centerBottom} onPress={() => { simonPlay([]); }} >
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>
+
             </View>
             <Text style={styles.scoreText}>Current Scrore: {score}</Text>
+            <View style={{ flex: 1 }}>
+                <Button onPress={() => dispatch({ type: ActionTypes.Reset })} title={'Clear game'} />
+            </View>
         </View>
     )
 };
@@ -138,7 +132,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        flex: 1,
+        flex: 2,
         margin: '5%',
         position: 'relative',
         borderColor: 'black',
