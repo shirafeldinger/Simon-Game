@@ -109,6 +109,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
                             style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} />
                     </View>
                 </View>
+                {/* start game with empty simon's array. if the array is not empty disable button */}
                 <TouchableOpacity disabled={simonsColors.length > 0} style={styles.centerBottom} onPress={() => { simonPlay([]); }} >
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>

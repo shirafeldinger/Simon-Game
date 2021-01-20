@@ -23,8 +23,8 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
         if (checkUserName) {
             return setValidName('name already in use')
         };
-        // check if result is in the top 10 . if the results length is 10 or higher
-        // or if the score is lowest than any score do not add result to the array of results
+        // check if the user's result is in the top 10 . if the results length is 10 or higher
+        // or if the score is lowest do not add result to the array of results
         const checkScore = results.some(result => score < result.score);
         if (checkScore && results.length >= 10) {
             dispatch({ type: ActionTypes.SetModalIsVisible, modalIsVisible: false })
@@ -56,7 +56,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
                     <Text style={styles.resultHeardLine}>Name</Text>
                     <Text style={styles.resultHeardLine}>Score</Text>
                 </View>
-                {/* if there is not space to show all the user can scrol */}
+                {/* if there is not space to show all the user can scroll */}
                 <ScrollView>
                     <FlatList data={results} renderItem={renderResults} keyExtractor={(result: Result) => result.userName ?? ''} />
                 </ScrollView>
@@ -75,7 +75,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
                             placeholderTextColor={'grey'}
                             onChangeText={userName => setUserName(userName)}
                             value={userName} />
-                        <Button title='move to Results'
+                        <Button title='submit'
                             onPress={() => { manageResults(userName) }}>
                         </Button>
                         <Text style={{ color: 'red' }}>{validName}</Text>
