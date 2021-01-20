@@ -32,7 +32,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
             return;
         };
         newResults.push({ userName, score })
-        const sortResults = newResults.sort((a, b) => (a.score < b.score) ? 1 : -1);
+        const sortResults = newResults.sort((a, b) => (a.score < b.score) ? 1 : -1); // sort results array to show the hightest score first
         dispatch({ type: ActionTypes.Reset });
         dispatch({ type: ActionTypes.SetResults, results: sortResults });
         dispatch({ type: ActionTypes.SetModalIsVisible, modalIsVisible: false })

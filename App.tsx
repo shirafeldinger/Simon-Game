@@ -5,7 +5,6 @@ import GameBoard from './components/GameBoard';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ResultsScreen from './components/ResultsScreen';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import { PersistGate } from 'redux-persist/integration/react'
