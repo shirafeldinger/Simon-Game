@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProps, SimonState } from '../App';
@@ -13,6 +13,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
     const score = useSelector<SimonState>(state => state.score) as number;
     const dispatch = useDispatch();
+    // const [buttonChosen, setButtonChosen] = useState('')
 
 
     const simonPlay = (simonColors: Array<string>) => {
@@ -20,7 +21,15 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         let chosenColor = colors[Math.floor(Math.random() * colors.length)];
         newSimonsColors.push(chosenColor);
         dispatch({ type: 'SET_SIMON_COLORS', simonsColors: newSimonsColors });
+        // playButtons(newSimonsColors);
     };
+
+    // const playButtons = (simonsColors: Array<string>) => {
+    //     simonsColors.forEach(color => {
+    //         sound.play();
+    //         setButtonChosen(color);
+    //     })
+    // }
 
     const userPlay = (chosenColor: string) => {
         sound.play();
@@ -50,20 +59,26 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     return (
         <View style={styles.container}>
             <View style={styles.boradContainer}>
+
                 <View>
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} onPress={() => { userPlay('blue') }} />
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} onPress={() => { userPlay('green') }} />
+                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('blue') }}
+                        style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} />
+                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('green') }}
+                        style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} />
                 </View>
+
                 <View>
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} onPress={() => { userPlay('yellow') }} />
-                    <TouchableOpacity style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} onPress={() => { userPlay('red') }} />
+                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('yellow') }}
+                        style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} />
+                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('red') }}
+                        style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} />
                 </View>
+
                 <TouchableOpacity style={styles.centerBottom} onPress={() => simonPlay([])} >
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>
             </View>
             <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore: {score}</Text>
-            <Button title='Results' onPress={() => navigation.navigate('Results')} />
         </View>
     )
 };
