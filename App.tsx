@@ -73,6 +73,7 @@ export const AppWrapper = () => {
   const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
+    whitelist: ['results'], //  only results will be persisted
   };
 
   const persistedReducer = persistReducer(persistConfig, reducer);
