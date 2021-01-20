@@ -14,7 +14,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     const score = useSelector<SimonState>(state => state.score) as number;
     const dispatch = useDispatch();
     const [btnsOpacity, setBtnsOpacity] = useState({ blue: 1, green: 1, yellow: 1, red: 1 });
-    const [simonTurn, setSimonTurn] = useState(true)
+    const [simonTurn, setSimonTurn] = useState(true);
 
 
     const simonPlay = async (simonColors: Array<string>) => {
@@ -23,7 +23,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
         let chosenColor = colors[Math.floor(Math.random() * colors.length)];
         newSimonsColors.push(chosenColor);
         dispatch({ type: 'SET_SIMON_COLORS', simonsColors: newSimonsColors });
-        await showSimonMoves(newSimonsColors); // active showSimonMoves function to show user simon's choices
+        await showSimonMoves(newSimonsColors); // active showSimonMoves function to show user simon's choices and wait for her to end
         setSimonTurn(false) // enabled buttons for user turn
     };
 
@@ -54,8 +54,8 @@ const GameBoard = ({ navigation }: NavigationProps) => {
             };
 
             setBtnsOpacity(clonedOpacities)
-        }
-    }
+        };
+    };
 
     const userPlay = (chosenColor: string) => {
         sound.play();
@@ -88,7 +88,8 @@ const GameBoard = ({ navigation }: NavigationProps) => {
 
     const lockButton = () => {
         return simonsColors.length == 0 || simonTurn
-    }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.boradContainer}>
@@ -122,7 +123,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>
             </View>
-            <Text style={{ flex: 1, alignSelf: 'center', fontSize: 20 }}>Current Scrore: {score}</Text>
+            <Text style={styles.scoreText}>Current Scrore: {score}</Text>
         </View>
     )
 };
@@ -140,10 +141,11 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: '5%',
         position: 'relative',
+        borderColor: 'black',
     },
     touchableOpacityStyle: {
-        height: 105,
-        width: 105,
+        height: 110,
+        width: 110,
         borderColor: 'black',
         borderWidth: 10,
     },
@@ -157,6 +159,11 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         height: 80,
         width: 80
+    },
+    scoreText: {
+        flex: 1,
+        alignSelf: 'center',
+        fontSize: 20
     }
 });
 

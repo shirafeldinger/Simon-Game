@@ -20,11 +20,11 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
         let newResults: Array<Result> = [...results]
         // check if user name already in use
         const checkUserName = newResults.some(result => result.userName === userName)
-        console.log(checkUserName);
         if (checkUserName) {
             return setValidName('name already in use')
         };
-        // check if result is in the top 10 . if he is not do not show
+        // check if result is in the top 10 . if the results length is 10 or higher
+        // or if the score is lowest than any score do not add result to the array of results
         const checkScore = results.some(result => score < result.score);
         if (checkScore && results.length >= 10) {
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
@@ -50,7 +50,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
     return (
         <View style={styles.container}>
 
-            <Text style={{ fontSize: 40, padding: '5%', flex: 1, color: '#6495ED', fontWeight: 'bold' }}> Results</Text>
+            <Text style={styles.pageHeadline}> Results</Text>
             <View style={{ width: '50%', flex: 6 }} >
                 <View style={styles.resultStyle}>
                     <Text style={styles.resultHeardLine}>Name</Text>
@@ -92,6 +92,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1
+    },
+    pageHeadline: {
+        fontSize: 40,
+        padding: '5%',
+        flex: 1,
+        color: '#6495ED',
+        fontWeight: 'bold'
     },
     resultStyle: {
         flexDirection: 'row',
