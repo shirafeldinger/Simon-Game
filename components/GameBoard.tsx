@@ -18,23 +18,24 @@ const GameBoard = ({ navigation }: NavigationProps) => {
 
 
     const simonPlay = async (simonColors: Array<string>) => {
-        setSimonTurn(true)
+        setSimonTurn(true) // disabled buttons when simon is playing
         let newSimonsColors: Array<string> = [...simonColors]
         let chosenColor = colors[Math.floor(Math.random() * colors.length)];
         newSimonsColors.push(chosenColor);
         dispatch({ type: 'SET_SIMON_COLORS', simonsColors: newSimonsColors });
-        await playButtons(newSimonsColors);
-        setSimonTurn(false)
+        await showSimonMoves(newSimonsColors); // active showSimonMoves function to show user simon's choices
+        setSimonTurn(false) // enabled buttons for user turn
     };
 
     const wait = (ms: number) => {
         return new Promise(resolve => setTimeout(resolve, ms))
     };
 
-    const playButtons = async (simonsColors: Array<string>) => {
+    const showSimonMoves = async (simonsColors: Array<string>) => {
 
         await wait(300)
-
+        // loop through simon chosen colors and for chosen button set background with opacity 
+        // and don't change opacity for  others colors in the array
         for (let color of simonsColors) {
             let clonedOpacities = {
                 ...btnsOpacity,
@@ -47,7 +48,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
 
             await wait(50)
 
-            clonedOpacities = {
+            clonedOpacities = {  // disabled opacity
                 ...btnsOpacity,
                 [color]: 1
             };
@@ -68,11 +69,15 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     };
 
     const checkUserSelection = (userColors: Array<string>) => {
+        // check if user chosen colors are the same as simon colors
         const hasUserSucceeded = userColors.every((color, index) => color === simonsColors[index])
+        // if true added 1 score and clean users old choices
         if (hasUserSucceeded) {
             dispatch({ type: 'SET_SCORE' })
             dispatch({ type: 'SET_USER_COLORS', userColors: [] });
             simonPlay(simonsColors);
+
+            // if user failed navgiate to results component and show modal
         } else {
             navigation.navigate('Results')
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: true })
@@ -81,7 +86,7 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     console.log(userColors, 'user');
     console.log(simonsColors, 'simon');
 
-    const shouldLock = () => {
+    const lockButton = () => {
         return simonsColors.length == 0 || simonTurn
     }
     return (
@@ -89,27 +94,30 @@ const GameBoard = ({ navigation }: NavigationProps) => {
             <View style={styles.boradContainer}>
 
                 <View >
+                    {/* opacity only works in parent view */}
                     <View style={{ opacity: btnsOpacity.blue }}>
-                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('blue') }}
+                        <TouchableOpacity disabled={lockButton()} onPress={() => { userPlay('blue') }}
                             style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} />
                     </View>
                     <View style={{ opacity: btnsOpacity.green }}>
-                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('green') }}
+                        <TouchableOpacity disabled={lockButton()} onPress={() => { userPlay('green') }}
                             style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} />
                     </View>
                 </View>
 
                 <View>
                     <View style={{ opacity: btnsOpacity.yellow }}>
-                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('yellow') }}
+                        <TouchableOpacity disabled={lockButton()} onPress={() => { userPlay('yellow') }}
                             style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} />
                     </View>
                     <View style={{ opacity: btnsOpacity.red }}>
-                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('red') }}
+                        <TouchableOpacity disabled={lockButton()} onPress={() => { userPlay('red') }}
                             style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} />
                     </View>
                 </View>
 
+                {/* when user click on start button simons chosen color's array should be empaty,
+                     even if it is in the middle of game */}
                 <TouchableOpacity style={styles.centerBottom} onPress={() => simonPlay([])} >
                     <Text style={{ fontSize: 20 }}>Start</Text>
                 </TouchableOpacity>

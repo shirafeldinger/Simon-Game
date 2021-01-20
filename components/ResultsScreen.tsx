@@ -24,7 +24,7 @@ const ResultsScreen = ({ navigation }: NavigationProps) => {
         if (checkUserName) {
             return setValidName('name already in use')
         };
-        // check if result is in the top 10 
+        // check if result is in the top 10 . if he is not do not show
         const checkScore = results.some(result => score < result.score);
         if (checkScore && results.length >= 10) {
             dispatch({ type: 'SET_MODAL_IS_VISIBLE', modalIsVisible: false })
