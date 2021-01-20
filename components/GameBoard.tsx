@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavigationProps, SimonState } from '../App';
 import Sound from 'react-native-sound';
@@ -13,23 +13,48 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     const simonsColors = useSelector<SimonState>(state => state.simonsColors) as Array<string>;
     const score = useSelector<SimonState>(state => state.score) as number;
     const dispatch = useDispatch();
-    // const [buttonChosen, setButtonChosen] = useState('')
+    const [btnsOpacity, setBtnsOpacity] = useState({ blue: 1, green: 1, yellow: 1, red: 1 });
+    const [simonTurn, setSimonTurn] = useState(true)
 
 
-    const simonPlay = (simonColors: Array<string>) => {
+    const simonPlay = async (simonColors: Array<string>) => {
+        setSimonTurn(true)
         let newSimonsColors: Array<string> = [...simonColors]
         let chosenColor = colors[Math.floor(Math.random() * colors.length)];
         newSimonsColors.push(chosenColor);
         dispatch({ type: 'SET_SIMON_COLORS', simonsColors: newSimonsColors });
-        // playButtons(newSimonsColors);
+        await playButtons(newSimonsColors);
+        setSimonTurn(false)
     };
 
-    // const playButtons = (simonsColors: Array<string>) => {
-    //     simonsColors.forEach(color => {
-    //         sound.play();
-    //         setButtonChosen(color);
-    //     })
-    // }
+    const wait = (ms: number) => {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    };
+
+    const playButtons = async (simonsColors: Array<string>) => {
+
+        await wait(300)
+
+        for (let color of simonsColors) {
+            let clonedOpacities = {
+                ...btnsOpacity,
+                [color]: 0.5
+            };
+
+            setBtnsOpacity(clonedOpacities)
+
+            sound.play();
+
+            await wait(50)
+
+            clonedOpacities = {
+                ...btnsOpacity,
+                [color]: 1
+            };
+
+            setBtnsOpacity(clonedOpacities)
+        }
+    }
 
     const userPlay = (chosenColor: string) => {
         sound.play();
@@ -56,22 +81,33 @@ const GameBoard = ({ navigation }: NavigationProps) => {
     console.log(userColors, 'user');
     console.log(simonsColors, 'simon');
 
+    const shouldLock = () => {
+        return simonsColors.length == 0 || simonTurn
+    }
     return (
         <View style={styles.container}>
             <View style={styles.boradContainer}>
 
-                <View>
-                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('blue') }}
-                        style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} />
-                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('green') }}
-                        style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} />
+                <View >
+                    <View style={{ opacity: btnsOpacity.blue }}>
+                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('blue') }}
+                            style={[styles.touchableOpacityStyle, { backgroundColor: 'blue', borderTopLeftRadius: 100 }]} />
+                    </View>
+                    <View style={{ opacity: btnsOpacity.green }}>
+                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('green') }}
+                            style={[styles.touchableOpacityStyle, { backgroundColor: 'green', borderBottomLeftRadius: 100 }]} />
+                    </View>
                 </View>
 
                 <View>
-                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('yellow') }}
-                        style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} />
-                    <TouchableOpacity disabled={simonsColors.length == 0} onPress={() => { userPlay('red') }}
-                        style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} />
+                    <View style={{ opacity: btnsOpacity.yellow }}>
+                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('yellow') }}
+                            style={[styles.touchableOpacityStyle, { backgroundColor: 'yellow', borderTopRightRadius: 100 }]} />
+                    </View>
+                    <View style={{ opacity: btnsOpacity.red }}>
+                        <TouchableOpacity disabled={shouldLock()} onPress={() => { userPlay('red') }}
+                            style={[styles.touchableOpacityStyle, { backgroundColor: 'red', borderBottomRightRadius: 100 }]} />
+                    </View>
                 </View>
 
                 <TouchableOpacity style={styles.centerBottom} onPress={() => simonPlay([])} >
@@ -101,7 +137,7 @@ const styles = StyleSheet.create({
         height: 105,
         width: 105,
         borderColor: 'black',
-        borderWidth: 10
+        borderWidth: 10,
     },
     centerBottom: {
         position: 'absolute',
