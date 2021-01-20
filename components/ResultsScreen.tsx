@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        marginVertical: '4%'
+        marginVertical: '4%',
     },
     resultHeardLine: {
         fontSize: 25,
@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
     },
     resultText: {
         fontSize: 20,
+        flex: 1,
+        textAlign: 'center'
     },
     modalView: {
         margin: 20,
